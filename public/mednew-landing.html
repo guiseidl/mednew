@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedNew — Telemedicina do Futuro</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-glow: rgba(13, 148, 136, 0.15);
+    --cream: #f8f5f0;
+    --white: #ffffff;
+    --gray: #94a3b8;
+    --gray-light: #e2e8f0;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% -10%, rgba(13,148,136,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at -10% 80%, rgba(13,148,136,0.10) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Grid lines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 22, 40, 0.7);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 20px rgba(13,148,136,0.4);
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .logo-text span { color: var(--teal-light); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  nav ul a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  nav ul a:hover { color: var(--white); }
+
+  .btn-nav {
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    color: var(--white) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600 !important;
+    transition: opacity 0.2s, box-shadow 0.2s !important;
+    box-shadow: 0 0 20px rgba(13,148,136,0.3);
+  }
+
+  .btn-nav:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 30px rgba(13,148,136,0.5) !important;
+  }
+
+  /* ── SECTIONS WRAPPER ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 5% 5rem;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--teal-glow);
+    border: 1px solid rgba(13,148,136,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--teal-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--teal-light);
+    position: relative;
+  }
+
+  h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    border-radius: 2px;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--gray);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 30px rgba(13,148,136,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(13,148,136,0.5);
+  }
+
+  .btn-secondary {
+    color: var(--gray);
+    padding: 0.9rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--white); }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--teal-light);
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--gray);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── HERO VISUAL ── */
+  .hero-visual {
+    position: relative;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-card-main {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-card-main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doctor-avatar {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--teal), #0f7065);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  .doctor-info { flex: 1; }
+  .doctor-name { font-weight: 600; font-size: 0.95rem; }
+  .doctor-spec { font-size: 0.78rem; color: var(--gray); }
+
+  .status-badge {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: #10b981;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+
+  .consult-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .info-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem;
+  }
+
+  .info-label { font-size: 0.7rem; color: var(--gray); margin-bottom: 0.2rem; }
+  .info-val { font-size: 0.9rem; font-weight: 600; }
+  .info-val.teal { color: var(--teal-light); }
+
+  .video-preview {
+    background: #060f1e;
+    border-radius: 12px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .video-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(13,148,136,0.1), transparent 70%);
+  }
+
+  .video-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 25px rgba(13,148,136,0.5);
+    position: relative;
+    z-index: 1;
+    animation: breathe 3s infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 25px rgba(13,148,136,0.5); }
+    50% { box-shadow: 0 0 45px rgba(13,148,136,0.8); }
+  }
+
+  .meet-label {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-size: 0.65rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* Floating cards */
+  .float-card {
+    position: absolute;
+    background: rgba(10,22,40,0.9);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    backdrop-filter: blur(20px);
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .float-card-1 {
+    top: -1.5rem;
+    right: -2rem;
+    animation: float1 4s ease-in-out infinite;
+  }
+
+  .float-card-2 {
+    bottom: -1rem;
+    left: -2rem;
+    animation: float2 4s 1s ease-in-out infinite;
+  }
+
+  @keyframes float1 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  .float-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+  }
+
+  .float-icon { font-size: 1rem; }
+  .float-text strong { color: var(--white); display: block; font-size: 0.82rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FEATURES ── */
+  .features {
+    padding: 6rem 5%;
+  }
+
+  .section-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--gray);
+    font-size: 1rem;
+    margin-bottom: 4rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .features-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .feat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: transform 0.3s, border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(13,148,136,0), transparent);
+    transition: background 0.3s;
+  }
+
+  .feat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(13,148,136,0.3);
+    background: rgba(13,148,136,0.05);
+  }
+
+  .feat-card:hover::before {
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+
+  .feat-icon {
+    width: 48px; height: 48px;
+    background: var(--teal-glow);
+    border: 1px solid rgba(13,148,136,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .feat-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .feat-desc {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* Larger card */
+  .feat-card.large {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .feat-card.large .feat-visual {
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    padding: 6rem 5%;
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .steps {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    align-items: start;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: rgba(13,148,136,0.2);
+    line-height: 1;
+    text-align: center;
+    letter-spacing: -0.05em;
+    transition: color 0.3s;
+  }
+
+  .step:hover .step-num { color: rgba(13,148,136,0.5); }
+
+  .step-body {}
+  .step-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+  .step-desc {
+    font-size: 0.88rem;
+    color: var(--gray);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* ── PROFILES ── */
+  .profiles {
+    padding: 6rem 5%;
+  }
+
+  .profiles-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .profile-card {
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .profile-card.patient { background: linear-gradient(135deg, rgba(13,148,136,0.08), rgba(13,148,136,0.02)); }
+  .profile-card.doctor { background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(99,102,241,0.02)); border-color: rgba(99,102,241,0.15); }
+  .profile-card.admin { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02)); border-color: rgba(245,158,11,0.15); }
+
+  .profile-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  .profile-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .profile-desc {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+
+  .profile-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .profile-list li {
+    font-size: 0.82rem;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .profile-list li::before {
+    content: '→';
+    color: var(--teal-light);
+    font-weight: 700;
+  }
+
+  .profile-card.doctor .profile-list li::before { color: #818cf8; }
+  .profile-card.admin .profile-list li::before { color: #fbbf24; }
+
+  /* ── TECH STACK ── */
+  .tech {
+    padding: 5rem 5%;
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tech-pills {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .tech-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .tech-pill:hover {
+    border-color: rgba(13,148,136,0.3);
+    background: rgba(13,148,136,0.05);
+  }
+
+  .tech-pill-icon { font-size: 1rem; }
+
+  /* ── CTA FINAL ── */
+  .cta-section {
+    padding: 7rem 5%;
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-section h2 { margin-bottom: 1rem; }
+  .cta-section p {
+    color: var(--gray);
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
+  .footer-logo span { color: var(--teal-light); }
+
+  .footer-text { font-size: 0.78rem; color: var(--gray); }
+
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.78rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── GLOW DIVIDER ── */
+  .glow-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    margin: 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .feat-card.large { grid-column: span 2; grid-template-columns: 1fr; }
+    .profiles-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .feat-card.large { grid-column: span 1; }
+    nav ul { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+
+  /* Preloader / shine */
+  .hero-card-main::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 30%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    animation: shine 4s 1s linear infinite;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%) rotate(15deg); }
+    100% { transform: translateX(600%) rotate(15deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">✚</div>
+    <span class="logo-text">Med<span>New</span></span>
+  </div>
+  <ul>
+    <li><a href="#features">Funcionalidades</a></li>
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#perfis">Perfis</a></li>
+    <li><a href="#" class="btn-nav">Agendar consulta</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Telemedicina • Plataforma MVP 2026
+      </div>
+
+      <h1>
+        Saúde de qualidade<br>
+        onde quer que<br>
+        <em>você esteja</em>
+      </h1>
+
+      <p class="hero-desc">
+        Consulte médicos especialistas de forma remota, segura e eficiente.
+        Agendamento online, videochamada integrada e prontuário digital — tudo em um só lugar.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#" class="btn-primary">
+          ✦ Agendar consulta
+        </a>
+        <a href="#como-funciona" class="btn-secondary">
+          Saiba como funciona →
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Disponibilidade</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">+50</div>
+          <div class="stat-label">Especialidades</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Online & Seguro</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO VISUAL -->
+    <div class="hero-visual">
+      <!-- Floating card top right -->
+      <div class="float-card float-card-1">
+        <div class="float-row">
+          <span class="float-icon">📅</span>
+          <div class="float-text">
+            <strong>Próxima consulta</strong>
+            Hoje às 14h30
+          </div>
+        </div>
+      </div>
+
+      <!-- Main card -->
+      <div class="hero-card-main">
+        <div class="card-header">
+          <div class="doctor-avatar">👨‍⚕️</div>
+          <div class="doctor-info">
+            <div class="doctor-name">Dr. Rafael Souza</div>
+            <div class="doctor-spec">Cardiologia · CRM 12345</div>
+          </div>
+          <div class="status-badge">● Online</div>
+        </div>
+
+        <div class="consult-info">
+          <div class="info-box">
+            <div class="info-label">Data</div>
+            <div class="info-val">27 Fev, 2026</div>
+          </div>
+          <div class="info-box">
+            <div class="info-label">Horário</div>
+            <div class="info-val teal">14:30</div>
+          </div>
+          <div class="info-box">
+            <div class="info-label">Pagamento</div>
+            <div class="info-val">Pix ✓</div>
+          </div>
+          <div class="info-box">
+            <div class="info-label">Plataforma</div>
+            <div class="info-val">Google Meet</div>
+          </div>
+        </div>
+
+        <div class="video-preview">
+          <div class="video-icon">▶</div>
+          <div class="meet-label">🎥 Google Meet · HD</div>
+        </div>
+      </div>
+
+      <!-- Floating card bottom left -->
+      <div class="float-card float-card-2">
+        <div class="float-row">
+          <span class="float-icon">✅</span>
+          <div class="float-text">
+            <strong>Pagamento confirmado</strong>
+            via Pix • R$ 180,00
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <p class="section-label">Funcionalidades</p>
+  <h2>Tudo que você precisa,<br>em uma plataforma</h2>
+  <p class="section-sub">Do agendamento à receita digital, o MedNew cobre todo o fluxo da consulta médica remota.</p>
+
+  <div class="features-grid">
+    <div class="feat-card large">
+      <div>
+        <div class="feat-icon">📅</div>
+        <div class="feat-title">Agendamento Inteligente</div>
+        <p class="feat-desc">Escolha a especialidade, o médico e o horário disponível em poucos cliques. O sistema gera automaticamente o link do Google Meet e envia confirmação por e-mail.</p>
+      </div>
+      <div class="feat-visual">
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div style="background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2);border-radius:8px;padding:0.75rem;display:flex;align-items:center;gap:0.75rem;">
+            <span>🩺</span>
+            <div>
+              <div style="font-size:0.82rem;font-weight:600;">Cardiologia</div>
+              <div style="font-size:0.72rem;color:var(--gray);">3 médicos disponíveis</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:0.75rem;display:flex;align-items:center;gap:0.75rem;">
+            <span>🧠</span>
+            <div>
+              <div style="font-size:0.82rem;font-weight:600;">Neurologia</div>
+              <div style="font-size:0.72rem;color:var(--gray);">5 médicos disponíveis</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:0.75rem;display:flex;align-items:center;gap:0.75rem;">
+            <span>🦴</span>
+            <div>
+              <div style="font-size:0.82rem;font-weight:600;">Ortopedia</div>
+              <div style="font-size:0.72rem;color:var(--gray);">2 médicos disponíveis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🎥</div>
+      <div class="feat-title">Videochamada via Google Meet</div>
+      <p class="feat-desc">Sala criada automaticamente pela Google Calendar API ao confirmar o agendamento. Sem instalação adicional.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">💊</div>
+      <div class="feat-title">Prontuário Eletrônico</div>
+      <p class="feat-desc">Médico registra diagnóstico, prescrições e observações. Paciente visualiza o histórico completo de consultas.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">📄</div>
+      <div class="feat-title">Receita Digital</div>
+      <p class="feat-desc">Emissão de receitas e atestados digitais ao final da consulta, diretamente pelo médico.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">💳</div>
+      <div class="feat-title">Pagamento Mercado Pago</div>
+      <p class="feat-desc">Pix, cartão de crédito e débito. Pagamento processado antes da confirmação da consulta.</p>
+    </div>
+
+    <div class="feat-card">
+      <div class="feat-icon">🔔</div>
+      <div class="feat-title">Lembretes Automáticos</div>
+      <p class="feat-desc">E-mails automáticos 24h e 1h antes da consulta para paciente e médico. Nunca mais esqueça um compromisso.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como-funciona">
+  <p class="section-label">Como funciona</p>
+  <h2>Simples do início ao fim</h2>
+  <p class="section-sub">Em poucos passos, você já está conectado com o seu médico.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-title">Crie sua conta e faça login</div>
+        <p class="step-desc">Cadastre-se como paciente informando nome, CPF, e-mail e telefone. O sistema redireciona você automaticamente para a área correta do seu perfil.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-title">Escolha especialidade, médico e horário</div>
+        <p class="step-desc">Navegue pelas especialidades disponíveis, veja a disponibilidade de cada médico e selecione o horário mais conveniente para você.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-title">Realize o pagamento</div>
+        <p class="step-desc">Pague via Pix, crédito ou débito através do Mercado Pago. Após a confirmação do pagamento, a consulta é automaticamente agendada.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-title">Receba o link do Google Meet por e-mail</div>
+        <p class="step-desc">Um e-mail de confirmação com o link da videochamada é enviado para você e para o médico. Lembretes automáticos chegam 24h e 1h antes.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-title">Consulte e receba seu prontuário</div>
+        <p class="step-desc">Realize a consulta pelo Google Meet. Ao final, o médico registra o prontuário, emite receitas digitais e você avalia o atendimento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILES -->
+<section class="profiles" id="perfis">
+  <p class="section-label">Perfis de usuário</p>
+  <h2>Uma plataforma,<br>três experiências</h2>
+  <p class="section-sub">Cada perfil tem uma área personalizada com tudo que precisa.</p>
+
+  <div class="profiles-grid">
+    <div class="profile-card patient">
+      <span class="profile-icon">🧑‍💼</span>
+      <div class="profile-title">Paciente</div>
+      <p class="profile-desc">Acesse cuidados médicos de qualidade sem sair de casa, com toda conveniência do digital.</p>
+      <ul class="profile-list">
+        <li>Agendar e cancelar consultas</li>
+        <li>Pagar via Pix, crédito ou débito</li>
+        <li>Acessar histórico e prontuários</li>
+        <li>Upload de exames e documentos</li>
+        <li>Avaliar médicos após consulta</li>
+      </ul>
+    </div>
+
+    <div class="profile-card doctor">
+      <span class="profile-icon">👨‍⚕️</span>
+      <div class="profile-title">Médico</div>
+      <p class="profile-desc">Gerencie sua agenda e atenda pacientes de onde estiver com todas as ferramentas clínicas.</p>
+      <ul class="profile-list">
+        <li>Gerenciar horários de disponibilidade</li>
+        <li>Conduzir consultas via Google Meet</li>
+        <li>Preencher prontuário eletrônico</li>
+        <li>Emitir receitas e atestados digitais</li>
+        <li>Visualizar histórico de pacientes</li>
+      </ul>
+    </div>
+
+    <div class="profile-card admin">
+      <span class="profile-icon">⚙️</span>
+      <div class="profile-title">Administrador</div>
+      <p class="profile-desc">Controle total da plataforma com métricas, gestão de usuários e relatórios financeiros.</p>
+      <ul class="profile-list">
+        <li>Gerenciar usuários e médicos</li>
+        <li>Visualizar métricas e relatórios</li>
+        <li>Controle financeiro da plataforma</li>
+        <li>Gestão de horários e especialidades</li>
+        <li>Monitoramento geral do sistema</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="tech">
+  <p class="section-label">Stack Tecnológica</p>
+  <h2>Construído com tecnologias modernas</h2>
+  <p class="section-sub" style="margin-bottom:2.5rem;">Stack selecionada para máxima eficiência no desenvolvimento e escalabilidade futura.</p>
+
+  <div class="tech-pills">
+    <div class="tech-pill"><span class="tech-pill-icon">🐘</span> Laravel 11</div>
+    <div class="tech-pill"><span class="tech-pill-icon">⚛️</span> React</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🔗</span> Inertia.js</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🎨</span> Tailwind CSS</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🐘</span> PostgreSQL</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🎥</span> Google Meet API</div>
+    <div class="tech-pill"><span class="tech-pill-icon">💳</span> Mercado Pago</div>
+    <div class="tech-pill"><span class="tech-pill-icon">📧</span> Mailgun</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🔒</span> Laravel Breeze</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🧪</span> Pest PHP</div>
+    <div class="tech-pill"><span class="tech-pill-icon">🐙</span> GitHub</div>
+    <div class="tech-pill"><span class="tech-pill-icon">☁️</span> Railway Deploy</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <p class="section-label">MedNew 2026</p>
+    <h2>Sua saúde não pode esperar</h2>
+    <p>Agende sua consulta agora e tenha acesso a médicos especialistas em minutos, de qualquer lugar do Brasil.</p>
+    <a href="#" class="btn-primary" style="display:inline-flex;">
+      ✦ Começar agora — é grátis
+    </a>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Med<span>New</span></div>
+  <div class="footer-text">© 2026 MedNew • Imersão Profissional: Fábrica de Software</div>
+  <div class="footer-links">
+    <a href="#">Privacidade</a>
+    <a href="#">LGPD</a>
+    <a href="#">Termos</a>
+    <a href="#">Contato</a>
+  </div>
+</footer>
+
+</body>
+</html>
