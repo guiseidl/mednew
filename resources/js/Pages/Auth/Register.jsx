@@ -4,6 +4,8 @@ import { Head, Link, useForm } from '@inertiajs/react';
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
+        cpf: '',
+        telefone: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -14,6 +16,23 @@ export default function Register() {
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
+    };
+
+    const formatCPF = (value) => {
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+            .replace(/(-\d{2})\d+?$/, '$1');
+    };
+
+    const formatTelefone = (value) => {
+        return value
+            .replace(/\D/g, '')
+            .replace(/(\d{2})(\d)/, '($1) $2')
+            .replace(/(\d{5})(\d)/, '$1-$2')
+            .replace(/(-\d{4})\d+?$/, '$1');
     };
 
     return (
@@ -49,7 +68,7 @@ export default function Register() {
                     position: relative; z-index: 1;
                     background: rgba(255,255,255,0.04);
                     border: 1px solid var(--border); border-radius: 24px;
-                    padding: 2.5rem; width: 100%; max-width: 480px;
+                    padding: 2.5rem; width: 100%; max-width: 500px;
                     backdrop-filter: blur(20px);
                     box-shadow: 0 25px 60px rgba(0,0,0,0.4);
                 }
@@ -81,6 +100,14 @@ export default function Register() {
                 }
                 .mn-input:focus { border-color: var(--teal); background: rgba(13,148,136,0.05); }
                 .mn-input::placeholder { color: rgba(148,163,184,0.5); }
+                .mn-divider-section {
+                    font-size: 0.72rem; font-weight: 700; color: var(--teal-light);
+                    letter-spacing: 0.1em; text-transform: uppercase;
+                    margin: 1.5rem 0 1rem; display: flex; align-items: center; gap: 0.75rem;
+                }
+                .mn-divider-section::before, .mn-divider-section::after {
+                    content: ''; flex: 1; height: 1px; background: var(--border);
+                }
                 .mn-btn {
                     width: 100%; padding: 0.85rem;
                     background: linear-gradient(135deg, var(--teal), var(--teal-light));
@@ -100,7 +127,7 @@ export default function Register() {
                 .mn-divider::before, .mn-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
                 .mn-divider span { font-size: 0.75rem; color: var(--gray); }
                 .mn-back { display: flex; justify-content: center; margin-top: 1rem; }
-                .mn-back a { font-size: 0.78rem; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 0.3rem; transition: color 0.2s; }
+                .mn-back a { font-size: 0.78rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
                 .mn-back a:hover { color: #fff; }
                 .mn-terms { font-size: 0.75rem; color: var(--gray); text-align: center; margin-top: 1rem; line-height: 1.5; }
                 .mn-terms a { color: var(--teal-light); text-decoration: none; }
@@ -117,31 +144,53 @@ export default function Register() {
                     <p className="mn-auth-sub">Comece a cuidar da sua saúde hoje mesmo</p>
 
                     <form onSubmit={submit}>
+
+                        <div className="mn-divider-section">Dados pessoais</div>
+
                         <div className="mn-field">
                             <label className="mn-label" htmlFor="name">Nome completo</label>
                             <input
-                                id="name"
-                                type="text"
-                                className="mn-input"
+                                id="name" type="text" className="mn-input"
                                 placeholder="Seu nome completo"
-                                value={data.name}
-                                autoComplete="name"
-                                autoFocus
+                                value={data.name} autoComplete="name" autoFocus
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
                             />
                             <InputError message={errors.name} className="mt-2" />
                         </div>
 
+                        <div className="mn-field-row">
+                            <div>
+                                <label className="mn-label" htmlFor="cpf">CPF</label>
+                                <input
+                                    id="cpf" type="text" className="mn-input"
+                                    placeholder="000.000.000-00"
+                                    value={data.cpf} maxLength={14}
+                                    onChange={(e) => setData('cpf', formatCPF(e.target.value))}
+                                    required
+                                />
+                                <InputError message={errors.cpf} className="mt-2" />
+                            </div>
+                            <div>
+                                <label className="mn-label" htmlFor="telefone">Telefone</label>
+                                <input
+                                    id="telefone" type="text" className="mn-input"
+                                    placeholder="(00) 00000-0000"
+                                    value={data.telefone} maxLength={15}
+                                    onChange={(e) => setData('telefone', formatTelefone(e.target.value))}
+                                />
+                                <InputError message={errors.telefone} className="mt-2" />
+                            </div>
+                        </div>
+
+                        <div className="mn-divider-section">Acesso</div>
+
                         <div className="mn-field">
                             <label className="mn-label" htmlFor="email">E-mail</label>
                             <input
-                                id="email"
-                                type="email"
-                                className="mn-input"
+                                id="email" type="email" className="mn-input"
                                 placeholder="seu@email.com"
-                                value={data.email}
-                                autoComplete="username"
+                                value={data.email} autoComplete="username"
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
                             />
@@ -152,12 +201,9 @@ export default function Register() {
                             <div>
                                 <label className="mn-label" htmlFor="password">Senha</label>
                                 <input
-                                    id="password"
-                                    type="password"
-                                    className="mn-input"
+                                    id="password" type="password" className="mn-input"
                                     placeholder="••••••••"
-                                    value={data.password}
-                                    autoComplete="new-password"
+                                    value={data.password} autoComplete="new-password"
                                     onChange={(e) => setData('password', e.target.value)}
                                     required
                                 />
@@ -166,12 +212,9 @@ export default function Register() {
                             <div>
                                 <label className="mn-label" htmlFor="password_confirmation">Confirmar senha</label>
                                 <input
-                                    id="password_confirmation"
-                                    type="password"
-                                    className="mn-input"
+                                    id="password_confirmation" type="password" className="mn-input"
                                     placeholder="••••••••"
-                                    value={data.password_confirmation}
-                                    autoComplete="new-password"
+                                    value={data.password_confirmation} autoComplete="new-password"
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
                                     required
                                 />
