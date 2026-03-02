@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ConsultaController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,9 +17,20 @@ Route::get('/', function () {
 });
 
 // ─── PACIENTE ────────────────────────────────────────────────
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Paciente/Dashboard');
+    })->name('dashboard');
+
+    // Agendamento
+    Route::get('/agendar', [ConsultaController::class, 'create'])->name('consultas.create');
+    Route::post('/agendar', [ConsultaController::class, 'store'])->name('consultas.store');
+    Route::get('/agendar/horarios', [ConsultaController::class, 'horariosDisponiveis'])->name('consultas.horarios');
+
+    // Consultas
+    Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.index');
+    Route::patch('/consultas/{consulta}/cancelar', [ConsultaController::class, 'cancelar'])->name('consultas.cancelar');
+});
 
 // ─── MÉDICO ──────────────────────────────────────────────────
 Route::middleware(['auth', 'verified'])->prefix('medico')->name('medico.')->group(function () {
